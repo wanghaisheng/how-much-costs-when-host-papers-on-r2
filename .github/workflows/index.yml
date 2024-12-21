@@ -3,6 +3,11 @@ name: "IndexNow"
 on:
   workflow_dispatch:  # Allows you to run this workflow manually from the Actions tab
 
+permissions:
+  contents: write
+  actions: write
+  secrets: write  # Ensure the token has write permissions to secrets
+
 jobs:
   check-and-submit:
     runs-on: ubuntu-latest
