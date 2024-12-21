@@ -16,8 +16,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
     - name: Install GitHub CLI
-      run: sudo apt-get install -y gh
+      run: |
+        type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+        && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+        && sudo apt update \
+        && sudo apt install gh -y
 
     - name: Authenticate GitHub CLI
       run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
@@ -26,24 +37,23 @@ jobs:
       id: check-key
       run: |
         if gh secret list | grep -q 'INDEXNOW_KEY'; then
-          echo "INDEXNOW_KEY exists"
           echo "EXISTS=true" >> $GITHUB_ENV
         else
-          echo "INDEXNOW_KEY does not exist"
           echo "EXISTS=false" >> $GITHUB_ENV
         fi
 
     - name: Generate IndexNow key if not exists
+      id: generate-key
       if: env.EXISTS == 'false'
       run: |
-        GENERATED_INDEXNOW_KEY=$(python generateKey.py)
-        echo "GENERATED_INDEXNOW_KEY=$GENERATED_INDEXNOW_KEY" >> $GITHUB_ENV
-        echo $GENERATED_INDEXNOW_KEY > indexnow_key.txt
+        GENERATED_KEY=$(python generateKey.py)
+        echo "GENERATED_INDEXNOW_KEY=${GENERATED_KEY}" >> $GITHUB_ENV
+        echo "${GENERATED_KEY}" > indexnow_key.txt
 
     - name: Save IndexNow key to GitHub secrets
       if: env.EXISTS == 'false'
       run: |
-        gh secret set INDEXNOW_KEY --body "$GENERATED_INDEXNOW_KEY"
+        gh secret set INDEXNOW_KEY --body "${{ env.GENERATED_INDEXNOW_KEY }}"
 
     - name: Read IndexNow key from secret
       if: env.EXISTS == 'true'
@@ -56,3 +66,12 @@ jobs:
         since: 1
         since-unit: "day"
         key: ${{ env.INDEXNOW_KEY }}
+
+    - name: Commit and push if key changed
+      if: env.EXISTS == 'false'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add indexnow_key.txt
+        git commit -m "Update IndexNow key" || echo "No changes to commit"
+        git push
