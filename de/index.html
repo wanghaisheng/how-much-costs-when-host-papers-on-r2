@@ -1,1 +1,593 @@
 
+
+<html><head><base href=".">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Cloudflare R2 Preisrechner - Berechnen Sie einfach Speicher- und Betriebskosten für akademische Papiersammlungen">
+    <meta name="keywords" content="Cloudflare R2, Preisrechner, Cloud-Speicher, akademischer Papierspeicher, Speicherkosten">
+    <meta name="author" content="Your Name or Company">
+    <meta http-equiv="Content-Language" content="de">
+
+    <!-- Canonical Link -->
+    <link rel="canonical" href="https://www.yourwebsite.com/r2-calculator" />
+
+    <!-- Open Graph for Social Media -->
+    <meta property="og:title" content="Cloudflare R2 Preisrechner">
+    <meta property="og:description" content="Berechnen Sie Cloudflare R2-Speicherkosten, perfekt für akademische Papiersammlungen">
+    <meta property="og:image" content="https://www.yourwebsite.com/r2-calculator-image.jpg">
+    <meta property="og:url" content="https://www.yourwebsite.com/r2-calculator">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cloudflare R2 Preisrechner">
+    <meta name="twitter:description" content="Berechnen Sie Cloudflare R2-Speicherkosten, perfekt für akademische Papiersammlungen">
+    <meta name="twitter:image" content="https://www.yourwebsite.com/r2-calculator-image.jpg">
+    <meta name="twitter:creator" content="@yourtwitterhandle">
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.yourwebsite.com/favicon.ico" type="image/x-icon">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXX-Y"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-XXXXX-Y');
+    </script>
+
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y) {
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.getElementsByTagName('script')[0];
+            y=l.createElement('script');
+            y.async=1;
+            y.src=r;
+            t.parentNode.insertBefore(y,t);
+        })(window, document, 'clarity', 'https://www.clarity.ms/tag/XXXXXX');
+    </script>
+
+    <title>Cloudflare R2 Preisrechner</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Keep the existing styles -->
+    <style>
+        :root {
+            --primary-color: #f6821f;
+            --secondary-color: #2c7cb0;
+            --background-color: #f6f6f7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--background-color);
+        }
+
+        .calculator-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(246, 130, 31, 0.2);
+        }
+
+        .free-tier-indicator {
+            position: absolute;
+            right: 10px;
+            top: 40px;
+            background: #e8f5e9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #2e7d32;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e67300;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cost-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .cost-item {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            height: 300px;
+        }
+
+        .savings-alert {
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .description-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .description-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .description-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .paper-collection-scenarios {
+            margin-top: 20px;
+        }
+
+        .scenario {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .scenario h4 {
+            color: var(--secondary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .scenario ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .scenario ul li {
+            margin-bottom: 5px;
+        }
+
+        .scenario ul ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .scenario ul ul li {
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .comparison-note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff3e0;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .comparison-note p {
+            margin: 10px 0;
+        }
+
+        .comparison-note ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>Cloudflare R2 Preisrechner</h1>
+
+        <form id="calculator">
+            <div class="form-group">
+                <label for="storage">Speicher (GB):</label>
+                <input type="number" id="storage" min="0" value="10" placeholder="Speicher in GB eingeben" required>
+                <span class="free-tier-indicator">Kostenlose Stufe: 10 GB</span>
+            </div>
+            <div class="form-group">
+                <label for="classA">Klasse A Operationen (Millionen):</label>
+                <input type="number" id="classA" min="0" step="0.1" value="1" placeholder="Anzahl der Klasse A Operationen eingeben" required>
+                <span class="free-tier-indicator">Kostenlose Stufe: 1 Mio. Operationen</span>
+            </div>
+            <div class="form-group">
+                <label for="classB">Klasse B Operationen (Millionen):</label>
+                <input type="number" id="classB" min="0" step="0.1" value="10" placeholder="Anzahl der Klasse B Operationen eingeben" required>
+                <span class="free-tier-indicator">Kostenlose Stufe: 10 Mio. Operationen</span>
+            </div>
+            <button type="button" onclick="calculateCost()">Kosten berechnen</button>
+        </form>
+
+        <div class="result" id="result">
+            <h2>Kostenaufschlüsselung</h2>
+            <div class="cost-breakdown">
+                <div class="cost-item" id="storageCost"></div>
+                <div class="cost-item" id="classACost"></div>
+                <div class="cost-item" id="classBCost"></div>
+                <div class="cost-item" id="totalCost"></div>
+                <div class="cost-item" id="yearlyCost"></div>
+            </div>
+            <div class="chart-container">
+                <canvas id="costChart"></canvas>
+            </div>
+            <div class="savings-alert" id="savingsAlert"></div>
+
+            <div class="description-section">
+                <h2>Ihre R2-Kosten verstehen</h2>
+                <div class="description-item">
+                    <h3>Speicherkosten</h3>
+                    <p>Speicherkosten betragen 0,015 $ pro GB pro Monat (erste 10 GB kostenlos). Speicherkosten werden basierend auf dem monatlichen Speichervolumen berechnet.</p>
+                </div>
+                <div class="description-item">
+                    <h3>Klasse A Operationen</h3>
+                    <p>Klasse A Operationen umfassen PUT, POST, LIST und andere modifizierende API-Aufrufe. Erste Million Operationen kostenlos, dann 4,50 $ pro Million Operationen. Beispiele sind das Hochladen von Dateien und das Erstellen von Buckets.</p>
+                </div>
+                <div class="description-item">
+                    <h3>Klasse B Operationen</h3>
+                    <p>Klasse B Operationen umfassen GET und HEAD-Anfragen. Erste 10 Millionen Operationen kostenlos, dann 0,36 $ pro Million Operationen. Diese sind in der Regel Leseoperationen wie das Herunterladen von Dateien oder das Überprüfen von Objektmets.</p>
+                </div>
+                <div class="description-item">
+                    <h3>Kostenlose Stufe Berechnung</h3>
+                    <p>Cloudflare R2s kostenlose Stufe umfasst:</p>
+                    <ul>
+                        <li>Erste 10 GB Speicher kostenlos</li>
+                        <li>Erste Million Klasse A Operationen kostenlos</li>
+                        <li>Erste 10 Millionen Klasse B Operationen kostenlos</li>
+                    </ul>
+                </div>
+                <div class="description-item">
+                    <h3>Beispiel: Verwaltung Ihrer Papiersammlung</h3>
+                    <p>Lassen Sie uns die Kosten für die Verwaltung einer persönlichen akademischen Papiersammlung auf R2 analysieren:</p>
+                    
+                    <div class="paper-collection-scenarios">
+                        <div class="scenario">
+                            <h4>Kleine Sammlung</h4>
+                            <ul>
+                                <li>Speicher: etwa 5 GB:
+                                    <ul>
+                                        <li> Etwa 1.000 Journalartikel (500 KB - 1 MB pro Artikel)</li>
+                                        <li> Etwa 100 Diplomarbeiten (3 MB - 20 MB pro Arbeit)</li>
+                                    </ul>
+                                </li>
+                                <li>Monatliche Downloads (Klasse B Operationen): 1 Million</li>
+                                <li>Monatliche Uploads (Klasse A Operationen): 100.000</li>
+                                <li><strong>Monatliche Kosten: 0 $</strong> (vollständig innerhalb der kostenlosen Stufe!)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="scenario">
+                            <h4>Mittlere Sammlung</h4>
+                            <ul>
+                                <li>Speicher: etwa 20 GB:
+                                    <ul>
+                                        <li> Etwa 2.500 Journalartikel (500 KB - 1 MB pro Artikel)</li>
+                                        <li> Etwa 300 Diplomarbeiten (3 MB - 20 MB pro Arbeit)</li>
+                                    </ul>
+                                </li>
+                                <li>Monatliche Downloads (Klasse B Operationen): 5 Millionen</li>
+                                <li>Monatliche Uploads (Klasse A Operationen): 500.000</li>
+                                <li><strong>Monatliche Kosten: 0,15 $</strong></li>
+                                <li>Aufschlüsselung:
+                                    <ul>
+                                        <li>Speicher: 0,15 $ (10 GB über der kostenlosen Stufe)</li>
+                                        <li>Operationen: 0 $ (innerhalb der kostenlosen Stufe)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="scenario">
+                            <h4>Große Forschungssammlung</h4>
+                            <ul>
+                                <li>Speicher: etwa 50 GB:
+                                    <ul>
+                                        <li> Etwa 5.000 Journalartikel (500 KB - 1 MB pro Artikel)</li>
+                                        <li> Etwa 1.000 Diplomarbeiten (3 MB - 20 MB pro Arbeit)</li>
+                                    </ul>
+                                </li>
+                                <li>Monatliche Downloads (Klasse B Operationen): 15 Millionen</li>
+                                <li>Monatliche Uploads (Klasse A Operationen): 2 Millionen</li>
+                                <li><strong>Monatliche Kosten: 2,28 $</strong></li>
+                                <li>Aufschlüsselung:
+                                    <ul>
+                                        <li>Speicher: 0,60 $ (40 GB über der kostenlosen Stufe)</li>
+                                        <li>Klasse A Operationen: 4,50 $ (1 Million über der kostenlosen Stufe)</li>
+                                        <li>Klasse B Operationen: 1,80 $ (5 Millionen über der kostenlosen Stufe)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="scenario">
+                            <h4>Dateigrößen-Referenz</h4>
+                            <ul>
+                                <li>Journalartikel: in der Regel kleiner als 1 MB
+                                    <ul>
+                                        <li> Die meisten Artikel: 300 KB - 800 KB</li>
+                                        <li> Artikel mit hochauflösenden Bildern: bis zu 1 MB</li>
+                                    </ul>
+                                </li>
+                                <li>Diplomarbeiten/Monografien: 3 MB - 20 MB
+                                    <ul>
+                                        <li> Standardartikel: 3 MB - 8 MB</li>
+                                        <li> Artikel mit Bildern/Daten: 10 MB - 20 MB</li>
+                                        <li> Dateigröße, Bilder und Format variieren</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-note">
+                        <p><strong>Kostenvergleich:</strong> Im Vergleich zu anderen Cloud-Speicherdiensten hat Cloudflare R2 wettbewerbsfähige Preise, insbesondere für kleine bis mittelgroße akademische Papiersammlungen.</p>
+                        <ul>
+                            <li>AWS S3: 0,023 $ pro GB + Datenübertragungskosten</li>
+                            <li>Google Cloud Storage: 0,020 $ pro GB + Datenübertragungskosten</li>
+                            <li>Azure Blob Storage: 0,018 $ pro GB + Datenübertragungskosten</li>
+                        </ul>
+                        <p>Cloudflare R2s kostenlose Stufe und niedrigere Preise machen es zu einer idealen Wahl für Einzelpersonen und kleine Organisationen, insbesondere für diejenigen, die keine großen Datenübertragungen benötigen.</p>
+                    </div>
+                </div>
+                <div class="description-item">
+                    <h3>Sammlungskostenvergleich</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Sammlungsgröße</th>
+                                <th>Speicherdetails</th>
+                                <th>Monatliche Operationen</th>
+                                <th>Monatliche Kosten</th>
+                                <th>Jährliche Kosten</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Klein (5 GB)</td>
+                                <td>
+                                    - 1.000 Journalartikel (etwa 1 MB pro Artikel)<br>
+                                    - 100 Diplomarbeiten (etwa 20 MB pro Arbeit)
+                                </td>
+                                <td>
+                                    - Downloads: 1 Million<br>
+                                    - Uploads: 100.000
+                                </td>
+                                <td>0,00 $</td>
+                                <td>0,00 $</td>
+                            </tr>
+                            <tr>
+                                <td>Mittel (20 GB)</td>
+                                <td>
+                                    - 2.500 Journalartikel (etwa 1 MB pro Artikel)<br>
+                                    - 300 Diplomarbeiten (etwa 20 MB pro Arbeit)
+                                </td>
+                                <td>
+                                    - Downloads: 5 Millionen<br>
+                                    - Uploads: 500.000
+                                </td>
+                                <td>0,15 $</td>
+                                <td>1,80 $</td>
+                            </tr>
+                            <tr>
+                                <td>Groß (50 GB)</td>
+                                <td>
+                                    - 5.000 Journalartikel (etwa 1 MB pro Artikel)<br>
+                                    - 1.000 Diplomarbeiten (etwa 20 MB pro Arbeit)
+                                </td>
+                                <td>
+                                    - Downloads: 15 Millionen<br>
+                                    - Uploads: 2 Millionen
+                                </td>
+                                <td>2,28 $</td>
+                                <td>27,36 $</td>
+                            </tr>
+                            <tr>
+                                <td>Extra Groß (100 GB)</td>
+                                <td>
+                                    - 10.000 Journalartikel (etwa 1 MB pro Artikel)<br>
+                                    - 2.000 Diplomarbeiten (etwa 20 MB pro Arbeit)
+                                </td>
+                                <td>
+                                    - Downloads: 30 Millionen<br>
+                                    - Uploads: 4 Millionen
+                                </td>
+                                <td>5,91 $</td>
+                                <td>70,92 $</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 10px;">
+                        Hinweis: Die Kosten umfassen Speicher und Operationen, die die kostenlose Stufe überschreiten. Alle Berechnungen basieren auf Annahmen über Dateigröße und Zugriffsmuster.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>let costChart = null;
+const pricing = {
+  storageCostPerGB: 0.015,
+  classACostPerMillion: 4.50,
+  classBCostPerMillion: 0.36,
+  freeTier: {
+    storage: 10,
+    classA: 1,
+    classB: 10
+  }
+};
+window.onload = function () {
+  calculateCost();
+};
+function calculateCost() {
+  const storage = parseFloat(document.getElementById("storage").value) || 0;
+  const classA = parseFloat(document.getElementById("classA").value) || 0;
+  const classB = parseFloat(document.getElementById("classB").value) || 0;
+  const billableStorage = Math.max(0, storage - pricing.freeTier.storage);
+  const billableClassA = Math.max(0, classA - pricing.freeTier.classA);
+  const billableClassB = Math.max(0, classB - pricing.freeTier.classB);
+  const storageCost = billableStorage * pricing.storageCostPerGB;
+  const classACost = billableClassA * pricing.classACostPerMillion;
+  const classBCost = billableClassB * pricing.classBCostPerMillion;
+  const totalCost = storageCost + classACost + classBCost;
+  const savings = storage * pricing.storageCostPerGB + classA * pricing.classACostPerMillion + classB * pricing.classBCostPerMillion - totalCost;
+  updateUI(storageCost, classACost, classBCost, totalCost, savings);
+  updateChart(storageCost, classACost, classBCost);
+}
+function updateUI(storageCost, classACost, classBCost, totalCost, savings) {
+    document.getElementById("storageCost").innerHTML = `
+        <h3>Speicherkosten</h3>
+        <p>${storageCost.toFixed(2)} $/Monat</p>
+    `;
+    document.getElementById("classACost").innerHTML = `
+        <h3>Klasse A Operationskosten</h3>
+        <p>${classACost.toFixed(2)} $/Monat</p>
+    `;
+    document.getElementById("classBCost").innerHTML = `
+        <h3>Klasse B Operationskosten</h3>
+        <p>${classBCost.toFixed(2)} $/Monat</p>
+    `;
+    document.getElementById("totalCost").innerHTML = `
+        <h3>Monatliche Gesamtkosten</h3>
+        <p>${totalCost.toFixed(2)} $/Monat</p>
+    `;
+    document.getElementById("yearlyCost").innerHTML = `
+        <h3>Jährliche Kosten</h3>
+        <p>${(totalCost * 12).toFixed(2)} $/Jahr</p>
+    `;
+
+    const savingsAlert = document.getElementById("savingsAlert");
+    if (savings > 0) {
+        savingsAlert.style.display = "block";
+        savingsAlert.textContent = `Die kostenlose Stufe spart Ihnen ${savings.toFixed(2)} $ pro Monat oder ${(savings * 12).toFixed(2)} $ pro Jahr!`;
+    } else {
+        savingsAlert.style.display = "none";
+    }
+}
+function updateChart(storageCost, classACost, classBCost) {
+    const ctx = document.getElementById('costChart').getContext('2d');
+    if (costChart) {
+        costChart.destroy();
+    }
+    costChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Speicherkosten', 'Klasse A Operationen', 'Klasse B Operationen'],
+            datasets: [{
+                data: [storageCost, classACost, classBCost],
+                backgroundColor: ['#f6821f', '#2c7cb0', '#6eb3e3']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}</script>
+</body>
+</html>
