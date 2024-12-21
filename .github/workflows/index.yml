@@ -6,11 +6,13 @@ on:
 permissions:
   contents: write
   actions: write
-  id-token: write  # Required for authentication
+  id-token: write
 
 jobs:
   check-and-submit:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Checkout repository
@@ -30,16 +32,18 @@ jobs:
         && sudo apt update \
         && sudo apt install gh -y
 
-    - name: Authenticate GitHub CLI
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Configure Git
       run: |
-        gh auth login --with-token <<< "$GH_TOKEN"
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+
+    - name: Configure GitHub CLI
+      run: |
+        gh auth setup-git
+        gh auth status
 
     - name: Check if IndexNow key exists
       id: check-key
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         if gh secret list | grep -q 'INDEXNOW_KEY'; then
           echo "EXISTS=true" >> $GITHUB_ENV
@@ -57,8 +61,6 @@ jobs:
 
     - name: Save IndexNow key to GitHub secrets
       if: env.EXISTS == 'false'
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh secret set INDEXNOW_KEY --body "${{ env.GENERATED_INDEXNOW_KEY }}"
 
@@ -77,8 +79,6 @@ jobs:
     - name: Commit and push if key changed
       if: env.EXISTS == 'false'
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
         git add indexnow_key.txt
         git commit -m "Update IndexNow key" || echo "No changes to commit"
-        git push
+        git push origin HEAD:main
