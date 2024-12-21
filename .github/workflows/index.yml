@@ -6,46 +6,42 @@ on:
 jobs:
   check-and-submit:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Install GitHub CLI
+      run: sudo apt-get install -y gh
+
+    - name: Authenticate GitHub CLI
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
     - name: Check if IndexNow key exists
       id: check-key
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { data: secrets } = await github.actions.listRepoSecrets({
-            owner: context.repo.owner,
-            repo: context.repo.repo
-          });
-          return secrets.secrets.some(secret => secret.name === 'INDEXNOW_KEY');
+      run: |
+        if gh secret list | grep -q 'INDEXNOW_KEY'; then
+          echo "INDEXNOW_KEY exists"
+          echo "EXISTS=true" >> $GITHUB_ENV
+        else
+          echo "INDEXNOW_KEY does not exist"
+          echo "EXISTS=false" >> $GITHUB_ENV
+        fi
 
     - name: Generate IndexNow key if not exists
-      if: steps.check-key.outputs.result == 'false'
+      if: env.EXISTS == 'false'
       run: |
-        # Generate the key (replace this with your actual key generation logic)
         GENERATED_INDEXNOW_KEY=$(python generateKey.py)
         echo "GENERATED_INDEXNOW_KEY=$GENERATED_INDEXNOW_KEY" >> $GITHUB_ENV
-        # Save the generated key to a file
         echo $GENERATED_INDEXNOW_KEY > indexnow_key.txt
 
     - name: Save IndexNow key to GitHub secrets
-      if: steps.check-key.outputs.result == 'false'
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const key = process.env.GENERATED_INDEXNOW_KEY;
-          await github.actions.createOrUpdateRepoSecret({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            secret_name: 'INDEXNOW_KEY',
-            encrypted_value: key
-          });
+      if: env.EXISTS == 'false'
+      run: |
+        gh secret set INDEXNOW_KEY --body "$GENERATED_INDEXNOW_KEY"
 
     - name: Read IndexNow key from secret
-      if: steps.check-key.outputs.result == 'true'
+      if: env.EXISTS == 'true'
       run: echo "INDEXNOW_KEY=${{ secrets.INDEXNOW_KEY }}" >> $GITHUB_ENV
 
     - name: IndexNow action
